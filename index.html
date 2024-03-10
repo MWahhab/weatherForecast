@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Weekly Weather Forecast</title>
+    <link rel="stylesheet" type="text/css" href="styles/style.css">
+</head>
+<body>
+<div class="card-container" id="card-container">
+
+</div>
+
+</body>
+</html>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script>
+    window.onload = function() {
+        axios.get('retrieveForecasts.php')
+            .then(function(response) {
+                console.log(response.data)
+                for(let i = 0; i < response.data.length; i++) {
+                    generateCard(i)
+                    fill(response.data, i);
+                }
+            })
+            .catch(function(error) {
+                console.log(error);
+            });
+    };
+
+    function generateCard(target) {
+        let weatherCard = document.createElement("div");
+        weatherCard.setAttribute("class", 'weather-card')
+
+        let date = document.createElement("div");
+        date.setAttribute("id", "date_" + target);
+        weatherCard.appendChild(date);
+
+        let day = document.createElement("div");
+        day.setAttribute("id", "day_" + target);
+        weatherCard.appendChild(day);
+
+        let temperature = document.createElement("div");
+        temperature.setAttribute("id", "temperature_" + target);
+        weatherCard.appendChild(temperature);
+
+        let weather = document.createElement("div");
+        weather.setAttribute("id", "weather_" + target);
+        weatherCard.appendChild(weather);
+
+        document.getElementById("card-container").appendChild(weatherCard);
+    }
+
+    function fill(arr, target) {
+        let date        = document.getElementById("date_" + target);
+        let dayEle      = document.getElementById("day_" + target);
+        let temperature = document.getElementById("temperature_" + target);
+        let weather     = document.getElementById("weather_" + target);
+
+        date.innerHTML        = new Date(arr[target]["date"]).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+        dayEle.innerHTML      = arr[target]["day"];
+        temperature.innerHTML = arr[target]["temperature"] + '&#8451;';
+        weather.innerHTML     = arr[target]["weather"];
+    }
+</script>
